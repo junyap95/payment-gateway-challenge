@@ -10,7 +10,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
-import com.checkout.payment.gateway.exception.BankUnavailableException;
+import com.checkout.payment.gateway.exception.AcquiringBankException;
 import com.checkout.payment.gateway.model.BankPaymentRequest;
 import com.checkout.payment.gateway.model.BankPaymentResponse;
 import com.checkout.payment.gateway.model.PostPaymentRequest;
@@ -57,8 +57,8 @@ class AcquiringBankClientTest {
   void bankClientErrorIsReportedAsNotProcessed() {
     bank.expect(requestTo("http://bank/payments")).andRespond(withBadRequest());
 
-    BankUnavailableException ex =
-        assertThrows(BankUnavailableException.class, () -> client.processPayment(bankRequest()));
+    AcquiringBankException ex =
+        assertThrows(AcquiringBankException.class, () -> client.processPayment(bankRequest()));
 
     assertEquals("Payment could not be processed by the acquiring bank", ex.getMessage());
   }
@@ -68,8 +68,8 @@ class AcquiringBankClientTest {
     bank.expect(requestTo("http://bank/payments"))
         .andRespond(withStatus(HttpStatus.SERVICE_UNAVAILABLE));
 
-    BankUnavailableException ex =
-        assertThrows(BankUnavailableException.class, () -> client.processPayment(bankRequest()));
+    AcquiringBankException ex =
+        assertThrows(AcquiringBankException.class, () -> client.processPayment(bankRequest()));
 
     assertEquals("Acquiring bank is unavailable", ex.getMessage());
   }

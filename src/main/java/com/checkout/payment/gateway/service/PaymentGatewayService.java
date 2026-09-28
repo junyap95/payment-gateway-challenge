@@ -2,7 +2,7 @@ package com.checkout.payment.gateway.service;
 
 import com.checkout.payment.gateway.client.AcquiringBankClient;
 import com.checkout.payment.gateway.enums.PaymentStatus;
-import com.checkout.payment.gateway.exception.BankUnavailableException;
+import com.checkout.payment.gateway.exception.AcquiringBankException;
 import com.checkout.payment.gateway.exception.EventProcessingException;
 import com.checkout.payment.gateway.exception.RejectedPaymentException;
 import com.checkout.payment.gateway.model.BankPaymentRequest;
@@ -53,7 +53,7 @@ public class PaymentGatewayService {
 
     // defensive check for when a 200 bankResponse has no body
     if (bankResponse == null) {
-      throw new BankUnavailableException("Invalid response from acquiring bank");
+      throw new AcquiringBankException("Invalid response from acquiring bank");
     }
 
     PaymentStatus status =

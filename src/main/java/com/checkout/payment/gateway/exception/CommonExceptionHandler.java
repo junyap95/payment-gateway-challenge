@@ -29,8 +29,8 @@ public class CommonExceptionHandler {
         HttpStatus.BAD_REQUEST);
   }
 
-  @ExceptionHandler(BankUnavailableException.class)
-  public ResponseEntity<ErrorResponse> handleBankUnavailable(BankUnavailableException ex) {
+  @ExceptionHandler(AcquiringBankException.class)
+  public ResponseEntity<ErrorResponse> handleAcquiringBankException(AcquiringBankException ex) {
     return new ResponseEntity<>(new ErrorResponse(ex.getMessage()),
         HttpStatus.BAD_GATEWAY);
   }

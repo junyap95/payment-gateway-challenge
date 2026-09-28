@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.checkout.payment.gateway.client.AcquiringBankClient;
 import com.checkout.payment.gateway.enums.PaymentStatus;
-import com.checkout.payment.gateway.exception.BankUnavailableException;
+import com.checkout.payment.gateway.exception.AcquiringBankException;
 import com.checkout.payment.gateway.model.BankPaymentRequest;
 import com.checkout.payment.gateway.model.BankPaymentResponse;
 import com.checkout.payment.gateway.model.PostPaymentResponse;
@@ -195,7 +195,7 @@ class PaymentGatewayControllerTest {
   @Test
   void whenBankUnavailableThenBadGatewayIsReturned() throws Exception {
     when(acquiringBankClient.processPayment(any(BankPaymentRequest.class)))
-        .thenThrow(new BankUnavailableException(
+        .thenThrow(new AcquiringBankException(
             "Acquiring bank is unavailable"));
 
     int futureYear = YearMonth.now().plusYears(1).getYear();

@@ -1,6 +1,6 @@
 package com.checkout.payment.gateway.client;
 
-import com.checkout.payment.gateway.exception.BankUnavailableException;
+import com.checkout.payment.gateway.exception.AcquiringBankException;
 import com.checkout.payment.gateway.model.BankPaymentRequest;
 import com.checkout.payment.gateway.model.BankPaymentResponse;
 import org.slf4j.Logger;
@@ -44,10 +44,10 @@ public class AcquiringBankClient {
       String message = ex.getStatusCode().is4xxClientError()
           ? "Payment could not be processed by the acquiring bank"
           : "Acquiring bank is unavailable";
-      throw new BankUnavailableException(message);
+      throw new AcquiringBankException(message);
     } catch (RestClientException ex) {
       LOG.error("Failed to call acquiring bank", ex);
-      throw new BankUnavailableException("Failed to call acquiring bank");
+      throw new AcquiringBankException("Failed to call acquiring bank");
     }
   }
 }
