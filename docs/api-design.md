@@ -89,18 +89,12 @@ Response mapping:
 ## Assumptions
 
 1. In-memory storage is sufficient and process-local (data is lost on restart).
-2. ~~Merchant request field names use snake_case (~~`card_number`~~,~~ `expiry_month`~~, etc.). Remove??~~
-3. ~~Response field names follow the existing skeleton’s camelCase JSON (~~`cardNumberLastFour`~~, etc.).~~
-4. Amount of `0` or negative is invalid.???
-5. Bank `400` responses are treated the same as other bank failures (`502`), because the gateway should have already rejected invalid merchant input.
-6. ~~ConcurrentHashMap was not introduced; the provided~~ `HashMap` ~~repository is kept as-is for simplicity.~~
-7. Rejected status means no payment is stored right? in my code I assumed this case.
-
-
+2. Amount of `0` or negative is invalid.
+3. Bank `400` responses are treated the same as other bank failures (`502`), because the gateway should have already rejected invalid merchant input.
+4. Rejected payment means no bank is called and no payment is stored.
 
 ## Testing approach
 
 - Controller/integration tests with `MockMvc` and a mocked `AcquiringBankClient` cover Authorized, Declined, Rejected, bank unavailable, GET-by-id, and GET-after-POST.
 - Unit tests cover validation rule edge cases in `PaymentRequestValidator`.
 
-To exercise the real simulator locally: `docker-compose up`, start the app, then `POST` to `http://localhost:8090/payment`.
