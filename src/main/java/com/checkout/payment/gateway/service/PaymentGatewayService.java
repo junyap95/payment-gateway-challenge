@@ -51,7 +51,7 @@ public class PaymentGatewayService {
     BankPaymentResponse bankResponse =
         acquiringBankClient.processPayment(bankPaymentRequest);
 
-        // defensive check for when a 200 bankResponse has no body
+    // defensive check for when a 200 bankResponse has no body
     if (bankResponse == null) {
       throw new BankUnavailableException("Invalid response from acquiring bank");
     }

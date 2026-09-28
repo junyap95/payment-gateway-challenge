@@ -18,17 +18,17 @@ sequenceDiagram
     V-->>S: no error
     S->>B: processPayment(bankRequest)
     B->>Sim: POST /payments
-    alt card ends in 1, 3, 5, 7, 9
+    alt Authorized Payment (card ends in 1, 3, 5, 7, 9)
       Sim-->>B: 200 authorized: true
       B-->>S: bank response
       S->>R: add(payment, last four digits only)
       S-->>M: 200 Authorized
-    else card ends in 2, 4, 6, 8
+    else (Unauthorized Payment) card ends in 2, 4, 6, 8
       Sim-->>B: 200 authorized: false
       B-->>S: bank response
       S->>R: add(payment, last four digits only)
       S-->>M: 200 Declined
-    else card ends in 0, or bank unreachable
+    else (Service Unavailable) card ends in 0
       Sim-->>B: 503, or no response
       B-->>M: 502 Bad Gateway (nothing stored)
     end

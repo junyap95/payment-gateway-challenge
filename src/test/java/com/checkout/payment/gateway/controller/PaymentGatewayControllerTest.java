@@ -126,7 +126,7 @@ class PaymentGatewayControllerTest {
 
     int futureYear = YearMonth.now().plusYears(1).getYear();
 
-    mvc.perform(MockMvcRequestBuilders.post("/payment")
+    MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/payment")
             .contentType(MediaType.APPLICATION_JSON)
             .content("""
                 {
@@ -141,7 +141,15 @@ class PaymentGatewayControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.status").value("Declined"))
         .andExpect(jsonPath("$.cardNumberLastFour").value(8878))
-        .andExpect(jsonPath("$.id").exists());
+        .andExpect(jsonPath("$.id").exists()).andReturn();
+
+        String paymentId = JsonPath.read(
+          result.getResponse().getContentAsString(), "$.id");
+
+        mvc.perform(MockMvcRequestBuilders.get("/payment/" + paymentId))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.status").value("Declined"))
+        .andExpect(jsonPath("$.cardNumberLastFour").value(8878));
   }
 
   @Test

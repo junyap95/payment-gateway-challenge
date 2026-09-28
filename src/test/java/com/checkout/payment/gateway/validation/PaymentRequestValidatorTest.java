@@ -23,11 +23,29 @@ class PaymentRequestValidatorTest {
   }
 
   @Test
+  void rejectsNullRequest() {
+    assertEquals("Payment request is required", validator.validate(null));
+  }
+
+  @Test
   void rejectsShortCardNumber() {
     PostPaymentRequest request = validRequest();
     request.setCardNumber("1234567890123");
     assertEquals("Card number must be between 14 and 19 characters",
         validator.validate(request));
+  }
+
+  @Test void rejectsLongCardNumber() {
+    PostPaymentRequest request = validRequest();
+    request.setCardNumber("12345678901234567890");
+    assertEquals("Card number must be between 14 and 19 characters",
+        validator.validate(request));
+  }
+
+  @Test void rejectsNullCardNumber() {
+    PostPaymentRequest request = validRequest();
+    request.setCardNumber(null);
+    assertEquals("Card number is required", validator.validate(request));
   }
 
   @Test
@@ -39,10 +57,24 @@ class PaymentRequestValidatorTest {
   }
 
   @Test
+  void rejectsNullExpiryMonth() {
+    PostPaymentRequest request = validRequest();
+    request.setExpiryMonth(null);
+    assertEquals("Expiry month is required", validator.validate(request));
+  }
+
+  @Test
   void rejectsInvalidExpiryMonth() {
     PostPaymentRequest request = validRequest();
     request.setExpiryMonth(13);
     assertEquals("Expiry month must be between 1 and 12", validator.validate(request));
+  }
+
+  @Test
+  void rejectsNullExpiryYear() {
+    PostPaymentRequest request = validRequest();
+    request.setExpiryYear(null);
+    assertEquals("Expiry year is required", validator.validate(request));
   }
 
   @Test
@@ -55,6 +87,13 @@ class PaymentRequestValidatorTest {
   }
 
   @Test
+  void rejectsNullCurrency() {
+    PostPaymentRequest request = validRequest();
+    request.setCurrency(null);
+    assertEquals("Currency is required", validator.validate(request));
+  }
+
+  @Test
   void rejectsUnsupportedCurrency() {
     PostPaymentRequest request = validRequest();
     request.setCurrency("JPY");
@@ -62,10 +101,24 @@ class PaymentRequestValidatorTest {
   }
 
   @Test
+  void rejectsNullAmount() {
+    PostPaymentRequest request = validRequest();
+    request.setAmount(null);
+    assertEquals("Amount is required", validator.validate(request));
+  }
+
+  @Test
   void rejectsNonPositiveAmount() {
     PostPaymentRequest request = validRequest();
     request.setAmount(0);
     assertEquals("Amount must be a positive integer", validator.validate(request));
+  }
+
+  @Test
+  void rejectsNullCvv() {
+    PostPaymentRequest request = validRequest();
+    request.setCvv(null);
+    assertEquals("CVV is required", validator.validate(request));
   }
 
   @Test
