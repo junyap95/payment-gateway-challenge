@@ -1,8 +1,7 @@
 package com.checkout.payment.gateway.exception;
 
 import com.checkout.payment.gateway.model.ErrorResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.checkout.payment.gateway.model.RejectedPaymentResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -11,12 +10,22 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class CommonExceptionHandler {
 
-  private static final Logger LOG = LoggerFactory.getLogger(CommonExceptionHandler.class);
-
   @ExceptionHandler(EventProcessingException.class)
   public ResponseEntity<ErrorResponse> handleException(EventProcessingException ex) {
-    LOG.error("Exception happened", ex);
-    return new ResponseEntity<>(new ErrorResponse("Page not found"),
+    return new ResponseEntity<>(new ErrorResponse("Payment record not found"),
         HttpStatus.NOT_FOUND);
+  }
+
+  @ExceptionHandler(RejectedPaymentException.class)
+  public ResponseEntity<RejectedPaymentResponse> handleRejectedPayment(
+      RejectedPaymentException ex) {
+    return new ResponseEntity<>(new RejectedPaymentResponse(ex.getMessage()),
+        HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(AcquiringBankException.class)
+  public ResponseEntity<ErrorResponse> handleAcquiringBankException(AcquiringBankException ex) {
+    return new ResponseEntity<>(new ErrorResponse(ex.getMessage()),
+        HttpStatus.BAD_GATEWAY);
   }
 }

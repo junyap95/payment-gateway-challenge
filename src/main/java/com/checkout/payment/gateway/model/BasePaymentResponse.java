@@ -1,15 +1,23 @@
 package com.checkout.payment.gateway.model;
 
 import com.checkout.payment.gateway.enums.PaymentStatus;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.util.UUID;
 
-public class GetPaymentResponse {
+public abstract class BasePaymentResponse {
   private UUID id;
   private PaymentStatus status;
-  private int cardNumberLastFour;
+  @Schema(example = "4321", description = "Last 4 digits of the card number")
+  private String cardNumberLastFour;
+  @Schema(example = "4", description = "Expiry month")
   private int expiryMonth;
+  @Schema(example = "2030", description = "Expiry year")
   private int expiryYear;
+  @Schema(example = "GBP", description = "Currency")
   private String currency;
+  @Schema(example = "1050", description = "Amount in minor currency units")
   private int amount;
 
   public UUID getId() {
@@ -28,11 +36,11 @@ public class GetPaymentResponse {
     this.status = status;
   }
 
-  public int getCardNumberLastFour() {
+  public String getCardNumberLastFour() {
     return cardNumberLastFour;
   }
 
-  public void setCardNumberLastFour(int cardNumberLastFour) {
+  public void setCardNumberLastFour(String cardNumberLastFour) {
     this.cardNumberLastFour = cardNumberLastFour;
   }
 
@@ -70,8 +78,8 @@ public class GetPaymentResponse {
 
   @Override
   public String toString() {
-    return "GetPaymentResponse{" +
-        "id=" + id +
+    return getClass().getSimpleName() +
+        "{id=" + id +
         ", status=" + status +
         ", cardNumberLastFour=" + cardNumberLastFour +
         ", expiryMonth=" + expiryMonth +
