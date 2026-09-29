@@ -1,6 +1,5 @@
 package com.checkout.payment.gateway.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class BankPaymentRequest {
@@ -15,14 +14,14 @@ public class BankPaymentRequest {
 
   public BankPaymentRequest(PostPaymentRequest paymentRequest) {
     this.cardNumber = paymentRequest.getCardNumber();
-    this.expiryDate = getExpiryDateForBank(paymentRequest.getExpiryMonth(), paymentRequest.getExpiryYear());
+    this.expiryDate = formatExpiryDate(paymentRequest.getExpiryMonth(), paymentRequest.getExpiryYear());
     this.currency = paymentRequest.getCurrency();
     this.amount = paymentRequest.getAmount();
     this.cvv = paymentRequest.getCvv();
   }
 
-  @JsonIgnore
-  public String getExpiryDateForBank(int expiryMonth, int expiryYear) {
+  // utility method for formatting expiry date for the bank
+  private static String formatExpiryDate(int expiryMonth, int expiryYear) {
     return String.format("%02d/%d", expiryMonth, expiryYear);
   }
 

@@ -74,11 +74,6 @@ public class PostPaymentRequest implements Serializable {
   }
 
   @JsonIgnore
-  public String getExpiryDateForBank() {
-    return String.format("%02d/%d", expiryMonth, expiryYear);
-  }
-
-  @JsonIgnore
   public String getCardNumberLastFour() {
       if (cardNumber == null || cardNumber.length() < 4) {
           return "N/A"; 

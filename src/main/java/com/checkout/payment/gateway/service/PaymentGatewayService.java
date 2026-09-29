@@ -37,13 +37,16 @@ public class PaymentGatewayService {
   public PostPaymentResponse getPaymentById(UUID id) {
     LOG.debug("Requesting access to payment with ID {}", id);
     return paymentsRepository.get(id)
-        .orElseThrow(() -> new EventProcessingException("Invalid ID"));
+        .orElseThrow(() -> {
+          LOG.info("Invalid ID: {}", id);
+          return new EventProcessingException("Invalid ID");
+        });
   }
 
   public PostPaymentResponse processPayment(PostPaymentRequest paymentRequest) {
     String validationError = paymentRequestValidator.validate(paymentRequest);
     if (validationError != null) {
-      LOG.info("Rejecting payment request: {}", validationError);
+      LOG.info("Request validation failed. Rejecting payment request: {}", validationError);
       throw new RejectedPaymentException(validationError);
     }
 
@@ -53,6 +56,7 @@ public class PaymentGatewayService {
 
     // defensive check for when a 200 bankResponse has no body
     if (bankResponse == null) {
+      LOG.error("Invalid response from acquiring bank");
       throw new AcquiringBankException("Invalid response from acquiring bank");
     }
 
